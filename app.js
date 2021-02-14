@@ -6,6 +6,7 @@ const sliderBtn = document.getElementById("create-slider");
 const sliderContainer = document.getElementById("sliders");
 const search = document.getElementById("search");
 
+let sliding = true;
 // selected image
 let sliders = [];
 
@@ -49,6 +50,7 @@ const selectItem = (event, img) => {
     sliders.splice(item, 1);
   }
 };
+
 var timer;
 const createSlider = () => {
   // check slider image length
@@ -69,8 +71,7 @@ const createSlider = () => {
   document.querySelector(".main").style.display = "block";
   // hide image aria
   imagesArea.style.display = "none";
-  const duration = document.getElementById("doration").value || 1000;
-  const slideDuration = duration > 0 ? duration : duration;
+
   sliders.forEach((slide) => {
     let item = document.createElement("div");
     item.className = "slider-item";
@@ -80,12 +81,22 @@ const createSlider = () => {
     sliderContainer.appendChild(item);
   });
   changeSlide(0);
-  timer = setInterval(function () {
-    slideIndex++;
-    changeSlide(slideIndex);
-  }, slideDuration);
+  slideChange();
 };
 
+const slideChange = () => {
+  let duration = Math.abs(+document.getElementById("doration").value) || 1000;
+
+  if (sliding) {
+    timer = setInterval(function () {
+      slideIndex++;
+      changeSlide(slideIndex);
+    }, duration);
+  } else {
+    clearInterval(timer);
+  }
+  console.log(duration);
+};
 // change slider index
 const changeItem = (index) => {
   changeSlide((slideIndex += index));
@@ -112,9 +123,9 @@ const changeSlide = (index) => {
 };
 
 const toggleSpinner = () => {
-  const spinner = document.getElementById('loading-spinner');
-  spinner.classList.toggle('d-none');
-}
+  const spinner = document.getElementById("loading-spinner");
+  spinner.classList.toggle("d-none");
+};
 
 searchBtn.addEventListener("click", function () {
   document.querySelector(".main").style.display = "none";
@@ -131,4 +142,9 @@ search.addEventListener("keyup", function (event) {
   if (event.key === "Enter") {
     searchBtn.click();
   }
+});
+
+sliderImage.addEventListener("click", () => {
+  sliding = !sliding;
+  slideChange();
 });
