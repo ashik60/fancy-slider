@@ -95,7 +95,6 @@ const slideChange = () => {
   } else {
     clearInterval(timer);
   }
-  console.log(duration);
 };
 // change slider index
 const changeItem = (index) => {
